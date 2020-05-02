@@ -43,6 +43,7 @@ void ClientMainWindow::onClickedConnectionButton()
     QString pseudoToSend = tr("<strong>") + m_player->getPseudo() + tr("</strong>");
 
     out << (quint16) 0;
+    out << (quint16) 0;
     out << pseudoToSend;
     out.device()->seek(0);
     out << (quint16) (package.size() - sizeof(quint16));
@@ -68,6 +69,7 @@ void ClientMainWindow::onClickedSendButton()
     QString messageToSend = tr("<strong>") + m_player->getPseudo() + tr("</strong> : ") + m_chatWindow->getMyMessage()->text();
 
     out << (quint16) 0;
+    out << (quint16) 1;
     out << messageToSend;
     out.device()->seek(0);
     out << (quint16) (package.size() - sizeof(quint16));

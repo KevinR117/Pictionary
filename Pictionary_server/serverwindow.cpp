@@ -23,7 +23,7 @@ ServerWindow::ServerWindow() : QWidget()
         QObject::connect(m_server, SIGNAL(newConnection()), this, SLOT(newClientConnection()));
     }
 
-    m_lenMessage = 0;
+    m_lenData = 0;
 }
 
 void ServerWindow::newClientConnection()
@@ -31,7 +31,7 @@ void ServerWindow::newClientConnection()
     QTcpSocket *newClient = m_server->nextPendingConnection();
     m_clients << newClient;
 
-    QObject::connect(newClient, SIGNAL(readyRead()), this, SLOT(receivedMessage()));
+    QObject::connect(newClient, SIGNAL(readyRead()), this, SLOT(receivedData()));
     QObject::connect(newClient, SIGNAL(disconnected()), this, SLOT(clientDisconnection()));
 }
 
@@ -48,7 +48,7 @@ void ServerWindow::clientDisconnection()
     }
 }
 
-void ServerWindow::receivedMessage()
+void ServerWindow::receivedData()
 {
     QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
     if (socket == 0)
@@ -58,37 +58,67 @@ void ServerWindow::receivedMessage()
 
     QDataStream in(socket);
 
-    if (m_lenMessage == 0)
+    if (m_lenData == 0)
     {
         if (socket->bytesAvailable() < (int) sizeof(quint16))
         {
             return;
         } else
         {
-            in >> m_lenMessage;
+            in >> m_lenData;
         }
     }
 
-    if (socket->bytesAvailable() < m_lenMessage)
+    if (socket->bytesAvailable() < m_lenData)
     {
         return;
     }
 
-    QString messageToSendToEveryOne;
-    in >> messageToSendToEveryOne;
+    quint16 dataType;
+    in >> dataType;
 
-    sendToEveryOne(messageToSendToEveryOne);
+    if (dataType == 1)
+    {
+        QString messageToSendToEveryOne;
+        in >> messageToSendToEveryOne;
 
-    m_lenMessage = 0;
+        sendMessageToEveryOne(messageToSendToEveryOne);
+    } else if (dataType == 0)
+    {
+        QString playerPseudoToSendToEveryOne;
+        in >> playerPseudoToSendToEveryOne;
+
+        sendPlayerPseudoToEveryOne(playerPseudoToSendToEveryOne);
+    }
+
+    m_lenData = 0;
 }
 
-void ServerWindow::sendToEveryOne(const QString &message)
+void ServerWindow::sendMessageToEveryOne(const QString &message)
 {
     QByteArray package;
     QDataStream out(&package, QIODevice::WriteOnly);
 
     out << (quint16) 0;
+    out << (quint16) 1;
     out << message;
+    out.device()->seek(0);
+    out << (quint16) (package.size() - sizeof(quint16));
+
+    for (int i = 0; i < m_clients.size(); i++)
+    {
+        m_clients[i]->write(package);
+    }
+}
+
+void ServerWindow::sendPlayerPseudoToEveryOne(const QString &pseudo)
+{
+    QByteArray package;
+    QDataStream out(&package, QIODevice::WriteOnly);
+
+    out << (quint16) 0;
+    out << (quint16) 0;
+    out << pseudo;
     out.device()->seek(0);
     out << (quint16) (package.size() - sizeof(quint16));
 

@@ -13,7 +13,10 @@ public:
     ServerWindow();
 
     //Send the message sent by a player to every one
-    void sendToEveryOne(const QString &message);
+    void sendMessageToEveryOne(const QString &message);
+
+    //Send the player pseydo to every one
+    void sendPlayerPseudoToEveryOne(const QString &pseudo);
 
 private slots:
 
@@ -24,7 +27,7 @@ private slots:
     void clientDisconnection();
 
     //Used when a message has been received from a player
-    void receivedMessage();
+    void receivedData();
 
 private:
     QLabel *m_serverState;
@@ -33,7 +36,7 @@ private:
     QTcpServer *m_server;
     QList<QTcpSocket *> m_clients;
 
-    quint16 m_lenMessage;
+    quint16 m_lenData;
 };
 
 #endif // SERVERWINDOW_H
