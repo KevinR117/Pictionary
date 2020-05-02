@@ -36,6 +36,18 @@ void ClientMainWindow::onClickedConnectionButton()
     m_socket->abort();
     m_socket->connectToHost(m_connectionWindow->getServerIP()->text(), m_connectionWindow->getPort()->value());
     m_player = new Player(m_connectionWindow->getPseudo());
+
+    QByteArray package;
+    QDataStream out(&package, QIODevice::WriteOnly);
+
+    QString pseudoToSend = tr("<strong>") + m_player->getPseudo() + tr("</strong>");
+
+    out << (quint16) 0;
+    out << pseudoToSend;
+    out.device()->seek(0);
+    out << (quint16) (package.size() - sizeof(quint16));
+
+    m_socket->write(package);
 }
 
 void ClientMainWindow::onConnectedClient()
@@ -53,10 +65,10 @@ void ClientMainWindow::onClickedSendButton()
     QByteArray package;
     QDataStream out(&package, QIODevice::WriteOnly);
 
-    QString messageToSent = tr("<strong>") + m_player->getPseudo() + tr("</strong> : ") + m_chatWindow->getMyMessage()->text();
+    QString messageToSend = tr("<strong>") + m_player->getPseudo() + tr("</strong> : ") + m_chatWindow->getMyMessage()->text();
 
     out << (quint16) 0;
-    out << messageToSent;
+    out << messageToSend;
     out.device()->seek(0);
     out << (quint16) (package.size() - sizeof(quint16));
 
