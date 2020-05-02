@@ -13,3 +13,8 @@ QGridLayout* PlayerListWindow::getPlayerListLayout() const
 {
     return this->m_playerListLayout;
 }
+
+QTextEdit* PlayerListWindow::getPlayers() const
+{
+    return this->m_players;
+}

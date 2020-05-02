@@ -18,14 +18,14 @@ ClientMainWindow::ClientMainWindow()
 
     setLayout(m_mainLayout);
 
-    m_lenMessage = 0;
+    m_lenData = 0;
 
     QObject::connect(m_connectionWindow->getConnectionButton(), SIGNAL(clicked()), this, SLOT(onClickedConnectionButton()));
     QObject::connect(m_socket, SIGNAL(connected()), this, SLOT(onConnectedClient()));
     QObject::connect(m_socket, SIGNAL(disconnected()), this, SLOT(onDisconnectedClient()));
 
     QObject::connect(m_chatWindow->getSendButton(), SIGNAL(clicked()), this, SLOT(onClickedSendButton()));
-    QObject::connect(m_socket, SIGNAL(readyRead()), this, SLOT(receivedMessage()));
+    QObject::connect(m_socket, SIGNAL(readyRead()), this, SLOT(receivedData()));
 }
 
 void ClientMainWindow::onClickedConnectionButton()
@@ -88,30 +88,42 @@ void ClientMainWindow::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void ClientMainWindow::receivedMessage()
+void ClientMainWindow::receivedData()
 {
     QDataStream in(m_socket);
 
-    if (m_lenMessage == 0)
+    if (m_lenData == 0)
     {
         if (m_socket->bytesAvailable() < (int)sizeof(quint16))
         {
             return;
         } else
         {
-            in >> m_lenMessage;
+            in >> m_lenData;
         }
     }
 
-    if (m_socket->bytesAvailable() < m_lenMessage)
+    if (m_socket->bytesAvailable() < m_lenData)
     {
         return;
     }
 
-    QString receivedMessage;
-    in >> receivedMessage;
+    quint16 typeData;
+    in >> typeData;
 
-    m_chatWindow->getMessages()->append(receivedMessage);
+    if (typeData == 1)
+    {
+        QString receivedMessage;
+        in >> receivedMessage;
 
-    m_lenMessage = 0;
+        m_chatWindow->getMessages()->append(receivedMessage);
+    } else if (typeData == 0)
+    {
+        QString receivedPseudo;
+        in >> receivedPseudo;
+
+        m_playerListWindow->getPlayers()->append(receivedPseudo + tr("       Points : "));
+    }
+
+    m_lenData = 0;
 }

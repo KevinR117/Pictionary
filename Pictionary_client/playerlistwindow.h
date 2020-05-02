@@ -11,6 +11,9 @@ public:
     //Return the player list Layout
     QGridLayout* getPlayerListLayout() const;
 
+    //Return the list of players already connected
+    QTextEdit* getPlayers() const;
+
 private:
     QGridLayout *m_playerListLayout;
     QTextEdit *m_players;

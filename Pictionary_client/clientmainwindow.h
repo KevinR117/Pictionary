@@ -37,7 +37,7 @@ public slots:
     void onClickedSendButton();
 
     //Used when the server send us a message that has been sent by another player
-    void receivedMessage();
+    void receivedData();
 
 private:
     QGridLayout *m_mainLayout;
@@ -48,7 +48,7 @@ private:
 
     QTcpSocket *m_socket;
 
-    quint16 m_lenMessage;
+    quint16 m_lenData;
 };
 
 #endif // CLIENTMAINWINDOW_H
