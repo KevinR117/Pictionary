@@ -66,7 +66,7 @@ void ClientMainWindow::onClickedSendButton()
 
 void ClientMainWindow::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Return)
+    if (event->key() == Qt::Key_Return && m_chatWindow->getMyMessage()->text() != tr(""))
     {
         onClickedSendButton();
     }
