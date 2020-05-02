@@ -7,6 +7,8 @@
 
 #include "chat.h"
 #include "clientconnectionwindow.h"
+#include "playerlistwindow.h"
+
 #include "player.h"
 
 class ClientMainWindow : public QWidget
@@ -41,6 +43,7 @@ private:
     QGridLayout *m_mainLayout;
     ClientConnectionWindow *m_connectionWindow;
     Chat *m_chatWindow;
+    PlayerListWindow *m_playerListWindow;
     Player *m_player;
 
     QTcpSocket *m_socket;

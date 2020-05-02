@@ -10,9 +10,11 @@ ClientMainWindow::ClientMainWindow()
 
     m_connectionWindow = new ClientConnectionWindow();
     m_chatWindow = new Chat();
+    m_playerListWindow = new PlayerListWindow();
 
-    m_mainLayout->addLayout(m_connectionWindow->getConnectionLayout(), 0, 0, 1, 3);
-    m_mainLayout->addLayout(m_chatWindow->getChatLayout(), 1, 2, 1, 1);
+    m_mainLayout->addLayout(m_connectionWindow->getConnectionLayout(), 0, 0, 1, 4);
+    m_mainLayout->addLayout(m_chatWindow->getChatLayout(), 1, 3, 1, 1);
+    m_mainLayout->addLayout(m_playerListWindow->getPlayerListLayout(), 1, 0, 1, 1);
 
     setLayout(m_mainLayout);
 
