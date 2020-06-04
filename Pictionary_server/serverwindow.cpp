@@ -96,6 +96,8 @@ void ServerWindow::receivedData()
         m_playerList->rankLastPlayer();
 
         sendPlayersToEveryOne(m_playerList->getPlayers(), m_playerList->getPlayers().size());
+
+        this->isEnoughPlayers();
     } else if (dataType == 1)
     {
         QString messageToSendToEveryOne;
@@ -161,5 +163,13 @@ void ServerWindow::sendPlayersToEveryOne(const std::vector<Player>, quint16 size
     for (int i = 0; i < m_clients.size(); i++)
     {
         m_clients[i]->write(package);
+    }
+}
+
+void ServerWindow::isEnoughPlayers()
+{
+    if (m_playerList->getPlayers().size() == 2)
+    {
+        emit(enoughPlayers());
     }
 }

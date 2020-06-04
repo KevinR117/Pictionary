@@ -21,6 +21,9 @@ public:
     //Send the player pseydo to every one
     void sendPlayersToEveryOne(const std::vector<Player>, quint16 size);
 
+    //If there are enough players, the signal enoughPlayers() is emitted
+    void isEnoughPlayers();
+
 signals:
     void enoughPlayers();
 
