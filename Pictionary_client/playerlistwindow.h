@@ -5,6 +5,9 @@
 
 class PlayerListWindow : public QWidget
 {
+
+    Q_OBJECT
+
 public:
     PlayerListWindow();
 

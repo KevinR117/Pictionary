@@ -13,6 +13,7 @@ ClientMainWindow::ClientMainWindow()
     m_playerListWindow = new PlayerListWindow();
     m_hiddenWordWindow = new HiddenWord();
     m_timerWindow = new Timer();
+    m_whiteBoardWindow = new WhiteBoardWindow();
 
     m_mainLayout->addLayout(m_connectionWindow->getConnectionLayout(), 0, 0, 1, 10);
     m_mainLayout->addLayout(m_chatWindow->getChatLayout(), 1, 7, 6, 3);
@@ -20,6 +21,7 @@ ClientMainWindow::ClientMainWindow()
     m_mainLayout->addLayout(m_hiddenWordWindow->getHiddenWordLayout(), 1, 2, 1, 5);
     m_mainLayout->addLayout(m_timerWindow->getTimerLayout(), 1, 0, 1, 2);
     m_mainLayout->addLayout(m_hiddenWordWindow->getChoseWordLayout(), 6, 0, 1, 3);
+    m_mainLayout->addLayout(m_whiteBoardWindow->getWhiteBoardLayout(), 1, 3, 6, 4);
 
     setLayout(m_mainLayout);
 

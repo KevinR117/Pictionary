@@ -6,7 +6,8 @@ SOURCES += main.cpp \
     clientmainwindow.cpp \
     hiddenword.cpp \
     playerlistwindow.cpp \
-    timer.cpp
+    timer.cpp \
+    whiteboardwindow.cpp
 
 HEADERS += \
     chat.h \
@@ -14,4 +15,5 @@ HEADERS += \
     clientmainwindow.h \
     hiddenword.h \
     playerlistwindow.h \
-    timer.h
+    timer.h \
+    whiteboardwindow.h

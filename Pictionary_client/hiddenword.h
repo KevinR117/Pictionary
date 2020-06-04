@@ -3,7 +3,7 @@
 
 #include <QtWidgets>
 
-class HiddenWord : public QObject
+class HiddenWord : public QWidget
 {
 
     Q_OBJECT

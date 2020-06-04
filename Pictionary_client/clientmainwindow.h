@@ -11,6 +11,7 @@
 #include "playerlistwindow.h"
 #include "hiddenword.h"
 #include "timer.h"
+#include "whiteboardwindow.h"
 
 class ClientMainWindow : public QWidget
 {
@@ -53,6 +54,7 @@ private:
     PlayerListWindow *m_playerListWindow;
     HiddenWord *m_hiddenWordWindow;
     Timer *m_timerWindow;
+    WhiteBoardWindow *m_whiteBoardWindow;
 
     QTcpSocket *m_socket;
 
