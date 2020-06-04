@@ -58,9 +58,7 @@ private:
     HiddenWord *m_hiddenWordWindow;
     Timer *m_timerWindow;
     WhiteBoardWindow *m_whiteBoardWindow;
-
     QTcpSocket *m_socket;
-
     quint16 m_lenData;
 };
 

@@ -97,8 +97,6 @@ void ServerWindow::receivedData()
         m_playerList->rankLastPlayer();
 
         sendPlayersToEveryOne(m_playerList->getPlayers(), m_playerList->getPlayers().size());
-
-        this->isEnoughPlayers();
     } else if (dataType == 1)
     {
         QString messageToSendToEveryOne;
@@ -118,8 +116,15 @@ void ServerWindow::receivedData()
         QString readyPlayerPseudo;
         in >> readyPlayerPseudo;
 
+        QString readyMessage;
+        in >> readyMessage;
+
         unsigned long long index = m_playerList->indexOfPlayer(readyPlayerPseudo);
         m_playerList->setPlayerReady(index);
+
+        sendMessageToEveryOne(tr("<strong>") + readyPlayerPseudo + tr("</strong> : ") + readyMessage);
+
+        isReadyToPlay();
     }
 
     m_lenData = 0;
@@ -179,7 +184,7 @@ bool ServerWindow::arePlayersReady()
     return true;
 }
 
-void ServerWindow::isEnoughPlayers()
+void ServerWindow::isReadyToPlay()
 {
     if (m_playerList->getPlayers().size() >= 2 and arePlayersReady())
     {

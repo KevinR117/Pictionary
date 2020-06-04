@@ -22,10 +22,14 @@ public:
     void sendPlayersToEveryOne(const std::vector<Player>, quint16 size);
 
     //If there are enough players, the signal enoughPlayers() is emitted
-    void isEnoughPlayers();
+    void isReadyToPlay();
 
     //Return true if all the players in the game are ready
     bool arePlayersReady();
+
+
+
+    void test_something();
 
 signals:
     void enoughPlayers();
@@ -46,16 +50,11 @@ private slots:
 private:
     QLabel *m_serverState;
     QPushButton *m_exitButton;
-
     QTcpServer *m_server;
     QList<QTcpSocket *> m_clients;
-
     PlayerList *m_playerList;
-
     quint16 m_lenData;
-
     QString m_disconnectedPlayer;
-
     Round *m_round;
 };
 
