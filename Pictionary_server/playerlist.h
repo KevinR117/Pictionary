@@ -17,6 +17,9 @@ public:
     //Return the list of players which are present in the game
     std::vector<Player> getPlayers() const;
 
+    //Return the index of the player given into the players list
+    unsigned long long indexOfPlayer(QString &pseudo) const;
+
     //Add a player to the list
     void addPlayer(Player player);
 
@@ -25,6 +28,9 @@ public:
 
     //Give the rank to the last player registered
     void rankLastPlayer();
+
+    //Set the concerned player readyness to true
+    void setPlayerReady(unsigned long long index);
 
     //Re-rank players properly after a disconnection of a player, whatever his position
     void rankAfterDisconnection();

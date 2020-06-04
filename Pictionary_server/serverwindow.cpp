@@ -1,5 +1,7 @@
 #include "serverwindow.h"
 
+#include <iostream>
+
 ServerWindow::ServerWindow() : QWidget()
 {
     setWindowTitle("Pictionary server");
@@ -86,13 +88,7 @@ void ServerWindow::receivedData()
     quint16 dataType;
     in >> dataType;
 
-    if (dataType == 1)
-    {
-        QString messageToSendToEveryOne;
-        in >> messageToSendToEveryOne;
-
-        sendMessageToEveryOne(messageToSendToEveryOne);
-    } else if (dataType == 0)
+    if (dataType == 0)
     {
         QString playerPseudoToSendToEveryOne;
         in >> playerPseudoToSendToEveryOne;
@@ -102,6 +98,12 @@ void ServerWindow::receivedData()
         m_playerList->rankLastPlayer();
 
         sendPlayersToEveryOne(m_playerList->getPlayers(), m_playerList->getPlayers().size());
+    } else if (dataType == 1)
+    {
+        QString messageToSendToEveryOne;
+        in >> messageToSendToEveryOne;
+
+        sendMessageToEveryOne(messageToSendToEveryOne);
     } else if (dataType == 2)
     {
         in >> m_disconnectedPlayer;
@@ -110,6 +112,18 @@ void ServerWindow::receivedData()
         m_playerList->rankAfterDisconnection();
 
         sendPlayersToEveryOne(m_playerList->getPlayers(), m_playerList->getPlayers().size());
+    } else if (dataType == 3)
+    {
+        QString readyPlayerPseudo;
+        in >> readyPlayerPseudo;
+
+        unsigned long long index = m_playerList->indexOfPlayer(readyPlayerPseudo);
+
+        std::cout << index << std::endl;
+
+        m_playerList->setPlayerReady(index);
+
+        std::cout << m_playerList->getPlayers()[0].getReadyness() << std::endl;
     }
 
     m_lenData = 0;

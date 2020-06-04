@@ -1,5 +1,7 @@
 #include "clientmainwindow.h"
 
+#include <iostream>
+
 ClientMainWindow::ClientMainWindow()
 {
     setWindowTitle(tr("Pictionary"));
@@ -185,6 +187,7 @@ void ClientMainWindow::onClickedReadyButton()
 
     out << (quint16) 0;
     out << (quint16) 3;
+    out << m_connectionWindow->getPseudo();
     out.device()->seek(0);
     out << (quint16) (package.size() - sizeof(quint16));
 
