@@ -13,3 +13,8 @@ QGridLayout* WhiteBoardWindow::getWhiteBoardLayout() const
 {
     return this->m_whiteBoardLayout;
 }
+
+QPushButton* WhiteBoardWindow::getReadyButton() const
+{
+    return this->m_readyButton;
+}

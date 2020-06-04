@@ -28,10 +28,12 @@ ClientMainWindow::ClientMainWindow()
     m_lenData = 0;
 
     QObject::connect(m_connectionWindow->getConnectionButton(), SIGNAL(clicked()), this, SLOT(onClickedConnectionButton()));
+    QObject::connect(m_chatWindow->getSendButton(), SIGNAL(clicked()), this, SLOT(onClickedSendButton()));
+    QObject::connect(m_whiteBoardWindow->getReadyButton(), SIGNAL(clicked()), this, SLOT(onClickedReadyButton()));
+
     QObject::connect(m_socket, SIGNAL(connected()), this, SLOT(onConnectedClient()));
     QObject::connect(m_socket, SIGNAL(disconnected()), this, SLOT(onDisconnectedClient()));
 
-    QObject::connect(m_chatWindow->getSendButton(), SIGNAL(clicked()), this, SLOT(onClickedSendButton()));
     QObject::connect(m_socket, SIGNAL(readyRead()), this, SLOT(receivedData()));
 }
 
@@ -170,6 +172,19 @@ void ClientMainWindow::sendPlayerPseudo()
     out << (quint16) 0;
     out << (quint16) 0;
     out << pseudoToSend;
+    out.device()->seek(0);
+    out << (quint16) (package.size() - sizeof(quint16));
+
+    m_socket->write(package);
+}
+
+void ClientMainWindow::onClickedReadyButton()
+{
+    QByteArray package;
+    QDataStream out(&package, QIODevice::WriteOnly);
+
+    out << (quint16) 0;
+    out << (quint16) 3;
     out.device()->seek(0);
     out << (quint16) (package.size() - sizeof(quint16));
 

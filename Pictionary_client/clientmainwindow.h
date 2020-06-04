@@ -44,6 +44,9 @@ public slots:
     //Used when the send button is clicked
     void onClickedSendButton();
 
+    //Used when the ready button is clicked
+    void onClickedReadyButton();
+
     //Used when the server send us a message that has been sent by another player
     void receivedData();
 
