@@ -22,6 +22,9 @@ public:
     //Return the pseudo of the player
     QString getPseudo() const;
 
+    //Return true if the player is ready to play
+    bool getReadyness() const;
+
     //Set the rank of the player to a given value
     void setRank(quint16 rank);
 
@@ -31,11 +34,15 @@ public:
     //Set the player state to a given value between drawer and guesser
     void setState(playerState state);
 
+    //Set the player to ready to play
+    void setReady();
+
 private:
     QString m_pseudo;
     int m_score;
     int m_rank;
     playerState m_playerState;
+    bool m_playerReady;
 };
 
 #endif // PLAYER_H
