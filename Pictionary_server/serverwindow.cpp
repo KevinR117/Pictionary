@@ -1,7 +1,5 @@
 #include "serverwindow.h"
 
-#include <iostream>
-
 ServerWindow::ServerWindow() : QWidget()
 {
     setWindowTitle("Pictionary server");
@@ -101,7 +99,7 @@ void ServerWindow::receivedData()
 
         Player *newPlayer = new Player(playerPseudoToSendToEveryOne);
         m_playerList->addPlayer(*newPlayer);
-        m_playerList->getPlayers()[m_playerList->getPlayers().size() - 1].setRank((quint16) 1);
+        m_playerList->rankLastPlayer();
 
         sendPlayersToEveryOne(m_playerList->getPlayers(), m_playerList->getPlayers().size());
     } else if (dataType == 2)

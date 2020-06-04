@@ -23,6 +23,9 @@ public:
     //Delete a player from the list
     void deletePlayer(const QString& pseudo);
 
+    //give the rank to the last player registered
+    void rankLastPlayer();
+
     //At the end of a tour and after points have been granted to every player, we sort the player list to updtate it. This method needs to be called at the end of every round
     void roundEndingRanking();
 

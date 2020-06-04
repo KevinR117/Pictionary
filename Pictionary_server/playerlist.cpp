@@ -26,6 +26,11 @@ void PlayerList::addPlayer(Player player)
     this->m_players.push_back(player);
 }
 
+void PlayerList::rankLastPlayer()
+{
+    this->m_players[m_players.size() - 1].setRank(m_players.size());
+}
+
 void PlayerList::roundEndingRanking()
 {
     for (unsigned long long i = 0; i < m_players.size() - 1; i++)
