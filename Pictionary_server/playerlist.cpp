@@ -31,6 +31,14 @@ void PlayerList::rankLastPlayer()
     this->m_players[m_players.size() - 1].setRank(m_players.size());
 }
 
+void PlayerList::rankAfterDisconnection()
+{
+    for (unsigned long long i = 0; i < m_players.size(); i++)
+    {
+        m_players[i].setRank(i + 1);
+    }
+}
+
 void PlayerList::roundEndingRanking()
 {
     for (unsigned long long i = 0; i < m_players.size() - 1; i++)
@@ -53,7 +61,11 @@ void PlayerList::deletePlayer(const QString &pseudo)
     {
         if (m_players[i].getPseudo() == pseudo)
         {
-            m_players.erase(m_players.begin() + i);
+            for (unsigned long long k = i; k < m_players.size() - 1; k++)
+            {
+                m_players[k] = m_players[k + 1];
+            }
+            m_players.pop_back();
         }
     }
 }

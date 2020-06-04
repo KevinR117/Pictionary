@@ -106,6 +106,10 @@ void ServerWindow::receivedData()
     {
         in >> m_disconnectedPlayer;
         m_playerList->deletePlayer(m_disconnectedPlayer);
+
+        m_playerList->rankAfterDisconnection();
+
+        sendPlayersToEveryOne(m_playerList->getPlayers(), m_playerList->getPlayers().size());
     }
 
     m_lenData = 0;
