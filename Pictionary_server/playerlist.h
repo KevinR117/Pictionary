@@ -1,10 +1,12 @@
 #ifndef PLAYERLIST_H
 #define PLAYERLIST_H
 
+#include <QtWidgets>
+
 #include <vector>
 #include "player.h"
 
-class PlayerList
+class PlayerList : public QWidget
 {
 public:
     PlayerList();
@@ -17,6 +19,9 @@ public:
 
     //Add a player to the list
     void addPlayer(Player player);
+
+    //Delete a player from the list
+    void deletePlayer(const QString& pseudo);
 
     //At the end of a tour and after points have been granted to every player, we sort the player list to updtate it. This method needs to be called at the end of every round
     void roundEndingRanking();

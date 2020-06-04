@@ -4,12 +4,13 @@
 #include <QtWidgets>
 #include <QtNetwork>
 #include <QKeyEvent>
+#include <string>
 
 #include "chat.h"
 #include "clientconnectionwindow.h"
 #include "playerlistwindow.h"
-
-#include "player.h"
+#include "hiddenword.h"
+#include "timer.h"
 
 class ClientMainWindow : public QWidget
 {
@@ -19,8 +20,14 @@ class ClientMainWindow : public QWidget
 public:
     ClientMainWindow();
 
-    //this is an alias for onClickedSendButton(), they do the same action
-    void keyPressEvent(QKeyEvent *event);
+    //This is an alias for onClickedSendButton(), they do the same action
+    void keyPressEvent(QKeyEvent *event) override;
+
+    //Used to send the player pseudo to delete when the main client window is closed before disconnecting the player himself
+    void closeEvent(QCloseEvent *event) override;
+
+    //When a player has connected successfully, it send to the server the player pseudo
+    void sendPlayerPseudo();
 
 public slots:
 
@@ -44,7 +51,8 @@ private:
     ClientConnectionWindow *m_connectionWindow;
     Chat *m_chatWindow;
     PlayerListWindow *m_playerListWindow;
-    Player *m_player;
+    HiddenWord *m_hiddenWordWindow;
+    Timer *m_timerWindow;
 
     QTcpSocket *m_socket;
 

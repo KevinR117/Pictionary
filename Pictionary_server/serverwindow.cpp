@@ -1,5 +1,7 @@
 #include "serverwindow.h"
 
+#include <iostream>
+
 ServerWindow::ServerWindow() : QWidget()
 {
     setWindowTitle("Pictionary server");
@@ -23,16 +25,25 @@ ServerWindow::ServerWindow() : QWidget()
         QObject::connect(m_server, SIGNAL(newConnection()), this, SLOT(newClientConnection()));
     }
 
+    m_playerList = new PlayerList();
+
     m_lenData = 0;
+
+    m_disconnectedPlayer = tr("");
+
+    m_round = new Round();
 }
 
 void ServerWindow::newClientConnection()
 {
-    QTcpSocket *newClient = m_server->nextPendingConnection();
-    m_clients << newClient;
+    if (!m_round->isStarted())
+    {
+        QTcpSocket *newClient = m_server->nextPendingConnection();
+        m_clients << newClient;
 
-    QObject::connect(newClient, SIGNAL(readyRead()), this, SLOT(receivedData()));
-    QObject::connect(newClient, SIGNAL(disconnected()), this, SLOT(clientDisconnection()));
+        QObject::connect(newClient, SIGNAL(readyRead()), this, SLOT(receivedData()));
+        QObject::connect(newClient, SIGNAL(disconnected()), this, SLOT(clientDisconnection()));
+    }
 }
 
 void ServerWindow::clientDisconnection()
@@ -88,10 +99,20 @@ void ServerWindow::receivedData()
         QString playerPseudoToSendToEveryOne;
         in >> playerPseudoToSendToEveryOne;
 
-        sendPlayerPseudoToEveryOne(playerPseudoToSendToEveryOne);
+        Player *newPlayer = new Player(playerPseudoToSendToEveryOne);
+        m_playerList->addPlayer(*newPlayer);
+        m_playerList->getPlayers()[m_playerList->getPlayers().size() - 1].setRank((quint16) 1);
+
+        sendPlayersToEveryOne(m_playerList->getPlayers(), m_playerList->getPlayers().size());
+    } else if (dataType == 2)
+    {
+        in >> m_disconnectedPlayer;
+        m_playerList->deletePlayer(m_disconnectedPlayer);
     }
 
     m_lenData = 0;
+
+    m_disconnectedPlayer = tr("");
 }
 
 void ServerWindow::sendMessageToEveryOne(const QString &message)
@@ -111,14 +132,20 @@ void ServerWindow::sendMessageToEveryOne(const QString &message)
     }
 }
 
-void ServerWindow::sendPlayerPseudoToEveryOne(const QString &pseudo)
-{
+void ServerWindow::sendPlayersToEveryOne(const std::vector<Player>, quint16 size)
+{   
     QByteArray package;
     QDataStream out(&package, QIODevice::WriteOnly);
 
     out << (quint16) 0;
     out << (quint16) 0;
-    out << pseudo;
+    out << size;
+    for (unsigned long long i = 0; i < size; i++)
+    {
+        out << tr("<strong>") + m_playerList->getPlayers()[i].getPseudo() + tr("</strong>");
+        out << m_playerList->getPlayers()[i].getScore();
+        out << m_playerList->getPlayers()[i].getRank();
+    }
     out.device()->seek(0);
     out << (quint16) (package.size() - sizeof(quint16));
 

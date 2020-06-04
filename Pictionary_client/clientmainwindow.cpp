@@ -11,10 +11,15 @@ ClientMainWindow::ClientMainWindow()
     m_connectionWindow = new ClientConnectionWindow();
     m_chatWindow = new Chat();
     m_playerListWindow = new PlayerListWindow();
+    m_hiddenWordWindow = new HiddenWord();
+    m_timerWindow = new Timer();
 
-    m_mainLayout->addLayout(m_connectionWindow->getConnectionLayout(), 0, 0, 1, 4);
-    m_mainLayout->addLayout(m_chatWindow->getChatLayout(), 1, 3, 6, 1);
-    m_mainLayout->addLayout(m_playerListWindow->getPlayerListLayout(), 2, 0, 5, 1);
+    m_mainLayout->addLayout(m_connectionWindow->getConnectionLayout(), 0, 0, 1, 10);
+    m_mainLayout->addLayout(m_chatWindow->getChatLayout(), 1, 7, 6, 3);
+    m_mainLayout->addLayout(m_playerListWindow->getPlayerListLayout(), 2, 0, 4, 3);
+    m_mainLayout->addLayout(m_hiddenWordWindow->getHiddenWordLayout(), 1, 2, 1, 5);
+    m_mainLayout->addLayout(m_timerWindow->getTimerLayout(), 1, 0, 1, 2);
+    m_mainLayout->addLayout(m_hiddenWordWindow->getChoseWordLayout(), 6, 0, 1, 3);
 
     setLayout(m_mainLayout);
 
@@ -35,25 +40,16 @@ void ClientMainWindow::onClickedConnectionButton()
 
     m_socket->abort();
     m_socket->connectToHost(m_connectionWindow->getServerIP()->text(), m_connectionWindow->getPort()->value());
-    m_player = new Player(m_connectionWindow->getPseudo());
-
-    QByteArray package;
-    QDataStream out(&package, QIODevice::WriteOnly);
-
-    QString pseudoToSend = tr("<strong>") + m_player->getPseudo() + tr("</strong>");
-
-    out << (quint16) 0;
-    out << (quint16) 0;
-    out << pseudoToSend;
-    out.device()->seek(0);
-    out << (quint16) (package.size() - sizeof(quint16));
-
-    m_socket->write(package);
 }
 
 void ClientMainWindow::onConnectedClient()
 {
     m_connectionWindow->getConnectionStatus()->setText(tr("Connexion réussie !"));
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    sendPlayerPseudo();
+
+    m_connectionWindow->getPseudoLineEdit()->setReadOnly(true);
 }
 
 void ClientMainWindow::onDisconnectedClient()
@@ -66,7 +62,7 @@ void ClientMainWindow::onClickedSendButton()
     QByteArray package;
     QDataStream out(&package, QIODevice::WriteOnly);
 
-    QString messageToSend = tr("<strong>") + m_player->getPseudo() + tr("</strong> : ") + m_chatWindow->getMyMessage()->text();
+    QString messageToSend = tr("<strong>") + m_connectionWindow->getPseudo() + tr("</strong> : ") + m_chatWindow->getMyMessage()->text();
 
     out << (quint16) 0;
     out << (quint16) 1;
@@ -82,10 +78,29 @@ void ClientMainWindow::onClickedSendButton()
 
 void ClientMainWindow::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Return && m_chatWindow->getMyMessage()->text() != tr("") && m_socket->state() == QAbstractSocket::ConnectedState)
+    if (event->key() == Qt::Key_Return && m_socket->state() == QAbstractSocket::UnconnectedState)
+    {
+        onClickedConnectionButton();
+    } else if (event->key() == Qt::Key_Return && m_chatWindow->getMyMessage()->text() != tr("") && m_socket->state() == QAbstractSocket::ConnectedState)
     {
         onClickedSendButton();
     }
+}
+
+void ClientMainWindow::closeEvent(QCloseEvent *event)
+{
+    event->accept();
+
+    QByteArray package;
+    QDataStream out(&package, QIODevice::WriteOnly);
+
+    out << (quint16) 0;
+    out << (quint16) 2;
+    out << m_connectionWindow->getPseudo();
+    out.device()->seek(0);
+    out << (quint16) (package.size() - sizeof(quint16));
+
+    m_socket->write(package);
 }
 
 void ClientMainWindow::receivedData()
@@ -119,11 +134,42 @@ void ClientMainWindow::receivedData()
         m_chatWindow->getMessages()->append(receivedMessage);
     } else if (typeData == 0)
     {
-        QString receivedPseudo;
-        in >> receivedPseudo;
+        m_playerListWindow->getPlayers()->clear();
 
-        m_playerListWindow->getPlayers()->append(receivedPseudo + tr("       Points : "));
+        quint16 size;
+        in >> size;
+        for (unsigned long long i = 0; i < size; i++)
+        {
+            QString receivedPseudo;
+            in >> receivedPseudo;
+            quint16 receivedScore;
+            quint16 receivedRank;
+            in >> receivedScore;
+            in >> receivedRank;
+
+            QString score;
+            QString rank;
+
+            m_playerListWindow->getPlayers()->append(receivedPseudo + tr(", Points : ") +score.setNum(receivedScore) + tr(", Rang : ") +rank.setNum(receivedRank));
+        }
     }
 
     m_lenData = 0;
+}
+
+void ClientMainWindow::sendPlayerPseudo()
+{
+
+    QByteArray package;
+    QDataStream out(&package, QIODevice::WriteOnly);
+
+    QString pseudoToSend = m_connectionWindow->getPseudo();
+
+    out << (quint16) 0;
+    out << (quint16) 0;
+    out << pseudoToSend;
+    out.device()->seek(0);
+    out << (quint16) (package.size() - sizeof(quint16));
+
+    m_socket->write(package);
 }

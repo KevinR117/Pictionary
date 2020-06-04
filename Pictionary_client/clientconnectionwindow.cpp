@@ -54,3 +54,8 @@ QString ClientConnectionWindow::getPseudo() const
 {
     return this->m_pseudo->text();
 }
+
+QLineEdit* ClientConnectionWindow::getPseudoLineEdit() const
+{
+    return this->m_pseudo;
+}

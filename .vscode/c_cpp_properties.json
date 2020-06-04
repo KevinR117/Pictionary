@@ -1,0 +1,17 @@
+{
+    "configurations": [
+        {
+            "name": "Pictionary",
+            "includePath": [
+                "C:/Users/kevin/Desktop/C++_Angular/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "intelliSenseMode": "msvc-x64"
+        }
+    ],
+    "version": 4
+}

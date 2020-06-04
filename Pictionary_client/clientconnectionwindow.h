@@ -29,6 +29,9 @@ public:
     //Return the pseudo entered by the player
     QString getPseudo() const;
 
+    //Return the QLineEdit used to chose one's pseudo. It will permit to desactivate it when the player is connected, so the player is well deleted when the player leave the game
+    QLineEdit* getPseudoLineEdit() const;
+
 private:
     QGridLayout *m_connectionLayout;
     QLabel *m_connectionStatus;

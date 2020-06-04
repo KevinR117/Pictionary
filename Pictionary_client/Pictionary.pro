@@ -5,15 +5,13 @@ SOURCES += main.cpp \
     clientconnectionwindow.cpp \
     clientmainwindow.cpp \
     hiddenword.cpp \
-    player.cpp \
-    playerlist.cpp \
-    playerlistwindow.cpp
+    playerlistwindow.cpp \
+    timer.cpp
 
 HEADERS += \
     chat.h \
     clientconnectionwindow.h \
     clientmainwindow.h \
     hiddenword.h \
-    player.h \
-    playerlist.h \
-    playerlistwindow.h
+    playerlistwindow.h \
+    timer.h

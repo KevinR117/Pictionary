@@ -4,6 +4,9 @@
 #include <QtWidgets>
 #include <QtNetwork>
 
+#include "playerlist.h"
+#include "round.h"
+
 class ServerWindow : public QWidget
 {
 
@@ -16,7 +19,10 @@ public:
     void sendMessageToEveryOne(const QString &message);
 
     //Send the player pseydo to every one
-    void sendPlayerPseudoToEveryOne(const QString &pseudo);
+    void sendPlayersToEveryOne(const std::vector<Player>, quint16 size);
+
+signals:
+    void enoughPlayers();
 
 private slots:
 
@@ -36,7 +42,13 @@ private:
     QTcpServer *m_server;
     QList<QTcpSocket *> m_clients;
 
+    PlayerList *m_playerList;
+
     quint16 m_lenData;
+
+    QString m_disconnectedPlayer;
+
+    Round *m_round;
 };
 
 #endif // SERVERWINDOW_H
