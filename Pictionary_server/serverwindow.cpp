@@ -1,7 +1,5 @@
 #include "serverwindow.h"
 
-#include <iostream>
-
 ServerWindow::ServerWindow() : QWidget()
 {
     setWindowTitle("Pictionary server");
@@ -118,12 +116,7 @@ void ServerWindow::receivedData()
         in >> readyPlayerPseudo;
 
         unsigned long long index = m_playerList->indexOfPlayer(readyPlayerPseudo);
-
-        std::cout << index << std::endl;
-
         m_playerList->setPlayerReady(index);
-
-        std::cout << m_playerList->getPlayers()[0].getReadyness() << std::endl;
     }
 
     m_lenData = 0;

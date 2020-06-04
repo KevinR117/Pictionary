@@ -1,7 +1,5 @@
 #include "clientmainwindow.h"
 
-#include <iostream>
-
 ClientMainWindow::ClientMainWindow()
 {
     setWindowTitle(tr("Pictionary"));
