@@ -24,6 +24,9 @@ public:
     //If there are enough players, the signal enoughPlayers() is emitted
     void isEnoughPlayers();
 
+    //Return true if all the players in the game are ready
+    bool arePlayersReady();
+
 signals:
     void enoughPlayers();
 
@@ -37,6 +40,8 @@ private slots:
 
     //Used when a message has been received from a player
     void receivedData();
+
+    void launchGame();
 
 private:
     QLabel *m_serverState;

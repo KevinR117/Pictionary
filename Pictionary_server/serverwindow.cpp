@@ -30,6 +30,7 @@ ServerWindow::ServerWindow() : QWidget()
     m_disconnectedPlayer = tr("");
 
     m_round = new Round();
+    QObject::connect(this, SIGNAL(enoughPlayers()), this, SLOT(launchGame()));
 }
 
 void ServerWindow::newClientConnection()
@@ -166,10 +167,27 @@ void ServerWindow::sendPlayersToEveryOne(const std::vector<Player>, quint16 size
     }
 }
 
+bool ServerWindow::arePlayersReady()
+{
+    for (unsigned long long i = 0; i < m_playerList->getPlayers().size(); i++)
+    {
+        if (!m_playerList->getPlayers()[i].getReadyness())
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 void ServerWindow::isEnoughPlayers()
 {
-    if (m_playerList->getPlayers().size() == 2)
+    if (m_playerList->getPlayers().size() >= 2 and arePlayersReady())
     {
         emit(enoughPlayers());
     }
+}
+
+void ServerWindow::launchGame()
+{
+    m_round->startRound();
 }
