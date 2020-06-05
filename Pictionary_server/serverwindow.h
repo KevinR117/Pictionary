@@ -6,6 +6,7 @@
 
 #include "playerlist.h"
 #include "round.h"
+#include "gamemanagerthread.h"
 
 class ServerWindow : public QWidget
 {
@@ -56,6 +57,7 @@ private:
     quint16 m_lenData;
     QString m_disconnectedPlayer;
     Round *m_round;
+    GameManagerThread *m_thread;
 };
 
 #endif // SERVERWINDOW_H

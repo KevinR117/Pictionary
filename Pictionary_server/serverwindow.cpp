@@ -31,6 +31,8 @@ ServerWindow::ServerWindow() : QWidget()
 
     m_round = new Round();
     QObject::connect(this, SIGNAL(enoughPlayers()), this, SLOT(launchGame()));
+
+    m_thread = new GameManagerThread();
 }
 
 void ServerWindow::newClientConnection()
@@ -195,4 +197,5 @@ void ServerWindow::isReadyToPlay()
 void ServerWindow::launchGame()
 {
     m_round->startRound();
+    m_thread->start();
 }
