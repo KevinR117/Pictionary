@@ -1,5 +1,7 @@
 #include "serverwindow.h"
 
+#include <iostream>
+
 ServerWindow::ServerWindow() : QWidget()
 {
     setWindowTitle("Pictionary server");
@@ -130,6 +132,12 @@ void ServerWindow::receivedData()
         sendMessageToEveryOne(tr("<strong>") + readyPlayerPseudo + tr("</strong> : ") + readyMessage);
 
         isReadyToPlay();
+    } else if (dataType == 5)
+    {
+        QString wordToHide;
+        in >> wordToHide;
+
+        hideWord(wordToHide);
     }
 
     m_lenData = 0;
@@ -245,5 +253,42 @@ void ServerWindow::nextPlayerToDraw()
 
             sendDrawerToEveryOne(0);
         }
+    }
+}
+
+void ServerWindow::hideWord(const QString &word)
+{
+    QString hiddenWord;
+
+    for (int i = 0; i < word.size(); i++)
+    {
+        if(word[i].isLetter())
+        {
+            hiddenWord += tr("_ ");
+        } else if (word[i] == tr(" "))
+        {
+            hiddenWord += tr("   ");
+        } else if (word[i] == tr("'"))
+        {
+            hiddenWord += tr("'");
+        } else if (word[i] == "-")
+        {
+            hiddenWord += tr("-");
+        }
+    }
+
+    QByteArray package;
+    QDataStream out(&package, QIODevice::WriteOnly);
+
+    out << (quint16) 0;
+    out << (quint16) 6;
+    out << hiddenWord;
+    out << tr("vous avez 80 secondes, GO !");
+    out.device()->seek(0);
+    out << (quint16) (package.size() - sizeof(quint16));
+
+    for (int i = 0; i < m_clients.size(); i++)
+    {
+        m_clients[i]->write(package);
     }
 }

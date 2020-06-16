@@ -47,6 +47,9 @@ public slots:
     //Used when the ready button is clicked
     void onClickedReadyButton();
 
+    //Used when the drawer chose the word
+    void onClickedChoseButton();
+
     //Used when the server send us a message that has been sent by another player
     void receivedData();
 

@@ -31,24 +31,19 @@ QGridLayout* HiddenWord::getChoseWordLayout() const
     return this->m_choseWordLayout;
 }
 
-void HiddenWord::hideWord(const QString &word)
+QPushButton* HiddenWord::getChoseButton() const
 {
-    for (int i = 0; i < word.size(); i++)
-    {
-        if(word[i].isLetter())
-        {
-            m_hiddenWord->insert("_ ");
-        } else if (word[i] == tr(" "))
-        {
-            m_hiddenWord->insert(tr("   "));
-        } else if (word[i] == tr("'"))
-        {
-            m_hiddenWord->insert(tr("'"));
-        } else if (word[i] == "-")
-        {
-            m_hiddenWord->insert(tr("-"));
-        }
-    }
+    return this->m_choseButton;
+}
+
+QLineEdit* HiddenWord::getChoseWord() const
+{
+    return this->m_choseWord;
+}
+
+QLineEdit* HiddenWord::getHiddenWord() const
+{
+    return this->m_hiddenWord;
 }
 
 void HiddenWord::enableChose()

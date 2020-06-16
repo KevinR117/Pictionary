@@ -30,6 +30,7 @@ ClientMainWindow::ClientMainWindow()
     QObject::connect(m_connectionWindow->getConnectionButton(), SIGNAL(clicked()), this, SLOT(onClickedConnectionButton()));
     QObject::connect(m_chatWindow->getSendButton(), SIGNAL(clicked()), this, SLOT(onClickedSendButton()));
     QObject::connect(m_whiteBoardWindow->getReadyButton(), SIGNAL(clicked()), this, SLOT(onClickedReadyButton()));
+    QObject::connect(m_hiddenWordWindow->getChoseButton(), SIGNAL(clicked()), this, SLOT(onClickedChoseButton()));
 
     QObject::connect(m_socket, SIGNAL(connected()), this, SLOT(onConnectedClient()));
     QObject::connect(m_socket, SIGNAL(disconnected()), this, SLOT(onDisconnectedClient()));
@@ -167,12 +168,19 @@ void ClientMainWindow::receivedData()
         if(drawer == m_connectionWindow->getPseudo())
         {
             m_hiddenWordWindow->enableChose();
-        }  else
-        {
-            m_hiddenWordWindow->disableChose();
         }
 
         m_chatWindow->getMessages()->append(drawerMessage);
+    } else if (typeData == 6)
+    {
+        QString hiddenWord;
+        in >> hiddenWord;
+
+        QString beginMessage;
+        in >> beginMessage;
+
+        m_hiddenWordWindow->getHiddenWord()->setPlaceholderText(hiddenWord);
+        m_chatWindow->getMessages()->append(beginMessage);
     }
 
     m_lenData = 0;
@@ -208,4 +216,20 @@ void ClientMainWindow::onClickedReadyButton()
     out << (quint16) (package.size() - sizeof(quint16));
 
     m_socket->write(package);
+}
+
+void ClientMainWindow::onClickedChoseButton()
+{
+    QByteArray package;
+    QDataStream out(&package, QIODevice::WriteOnly);
+
+    out << (quint16) 0;
+    out << (quint16) 5;
+    out << m_hiddenWordWindow->getChoseWord()->text();
+    out.device()->seek(0);
+    out << (quint16) (package.size() - sizeof(quint16));
+
+    m_socket->write(package);
+
+    m_hiddenWordWindow->disableChose();
 }

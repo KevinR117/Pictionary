@@ -31,6 +31,9 @@ public:
     //Return true if all the players in the game are ready
     bool arePlayersReady() const;
 
+    //Send the hidden word to all players before the beggining of the drawing session
+    void hideWord(const QString &word);
+
 signals:
     void enoughPlayers();
 
@@ -50,6 +53,7 @@ private slots:
     //Used when the game is launched
     void launchGame();
 
+    //Used when a drawing session is ended up
     void nextPlayerToDraw();
 
 private:
