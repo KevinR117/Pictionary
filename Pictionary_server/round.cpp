@@ -1,20 +1,11 @@
 #include "round.h"
 
-Round::Round() : m_roundStarted(false)
+Round::Round()
 {
 
 }
 
-void Round::startRound()
+Round::Round(int nb_players) : m_nbPlayers(nb_players)
 {
-    m_roundStarted = true;
-}
 
-bool Round::isStarted()
-{
-    if (m_roundStarted)
-    {
-        return true;
-    }
-    return false;
 }

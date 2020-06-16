@@ -29,15 +29,18 @@ ServerWindow::ServerWindow() : QWidget()
 
     m_disconnectedPlayer = tr("");
 
-    m_round = new Round();
     QObject::connect(this, SIGNAL(enoughPlayers()), this, SLOT(launchGame()));
 
     m_thread = new GameManagerThread();
+    QObject::connect(m_thread, SIGNAL(nextPlayerDrawing()), this, SLOT(nextPlayerToDraw()));
+    QObject::connect(this, SIGNAL(nbPlayers(int)), m_thread, SLOT(receiveNbPlayers(int)));
+
+    m_gameStarted = false;
 }
 
 void ServerWindow::newClientConnection()
 {
-    if (!m_round->isStarted())
+    if (!m_gameStarted)
     {
         QTcpSocket *newClient = m_server->nextPendingConnection();
         m_clients << newClient;
@@ -174,7 +177,28 @@ void ServerWindow::sendPlayersToEveryOne(const std::vector<Player>, quint16 size
     }
 }
 
-bool ServerWindow::arePlayersReady()
+void ServerWindow::sendDrawerToEveryOne(int i)
+{
+    QByteArray package;
+    QDataStream out(&package, QIODevice::WriteOnly);
+
+    QString pseudo = m_playerList->getPlayers()[i].getPseudo();
+    QString message = pseudo + tr(" is drawing");
+
+    out << (quint16) 0;
+    out << (quint16) 4;
+    out << pseudo;
+    out << message;
+    out.device()->seek(0);
+    out << (quint16) (package.size() - sizeof(quint16));
+
+    for (int i = 0; i < m_clients.size(); i++)
+    {
+        m_clients[i]->write(package);
+    }
+}
+
+bool ServerWindow::arePlayersReady() const
 {
     for (unsigned long long i = 0; i < m_playerList->getPlayers().size(); i++)
     {
@@ -188,7 +212,7 @@ bool ServerWindow::arePlayersReady()
 
 void ServerWindow::isReadyToPlay()
 {
-    if (m_playerList->getPlayers().size() >= 2 and arePlayersReady())
+    if (m_playerList->getPlayers().size() >= 1 and arePlayersReady())
     {
         emit(enoughPlayers());
     }
@@ -196,6 +220,30 @@ void ServerWindow::isReadyToPlay()
 
 void ServerWindow::launchGame()
 {
-    m_round->startRound();
+    m_gameStarted = true;
+    emit(nbPlayers(m_playerList->getPlayers().size()));
     m_thread->start();
+}
+
+void ServerWindow::nextPlayerToDraw()
+{
+    bool somebodyDrawing = false;
+    for (unsigned long long i = 0; i < m_playerList->getPlayers().size(); i++)
+    {
+        if (m_playerList->getPlayers()[i].getState() == Player::drawer)
+        {
+            m_playerList->getPlayers()[i].setState(Player::guesser);
+            m_playerList->getPlayers()[i + 1].setState(Player::drawer);
+
+            sendDrawerToEveryOne(i + 1);
+
+            somebodyDrawing = true;
+        }
+        if (somebodyDrawing == false)
+        {
+            m_playerList->getPlayers()[0].setState(Player::drawer);
+
+            sendDrawerToEveryOne(0);
+        }
+    }
 }

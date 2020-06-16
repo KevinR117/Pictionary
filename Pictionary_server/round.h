@@ -3,19 +3,16 @@
 
 #include <QtWidgets>
 
+#include "player.h"
+
 class Round : public QWidget
 {
 public:
     Round();
-
-    //Return true if the round is already started. In this case, new players can't connect to the server anymore
-    bool isStarted();
-
-public slots:
-    void startRound();
+    Round(int nb_players);
 
 private:
-    bool m_roundStarted;
+    int m_nbPlayers;
 };
 
 #endif // ROUND_H

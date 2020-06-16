@@ -3,9 +3,9 @@
 
 #include <QtWidgets>
 #include <QtNetwork>
+#include <QPair>
 
 #include "playerlist.h"
-#include "round.h"
 #include "gamemanagerthread.h"
 
 class ServerWindow : public QWidget
@@ -22,18 +22,19 @@ public:
     //Send the player pseydo to every one
     void sendPlayersToEveryOne(const std::vector<Player>, quint16 size);
 
+    //Send the pseudo of the drawer to designate the good one
+    void sendDrawerToEveryOne(int i);
+
     //If there are enough players, the signal enoughPlayers() is emitted
     void isReadyToPlay();
 
     //Return true if all the players in the game are ready
-    bool arePlayersReady();
-
-
-
-    void test_something();
+    bool arePlayersReady() const;
 
 signals:
     void enoughPlayers();
+
+    void nbPlayers(int);
 
 private slots:
 
@@ -46,7 +47,10 @@ private slots:
     //Used when a message has been received from a player
     void receivedData();
 
+    //Used when the game is launched
     void launchGame();
+
+    void nextPlayerToDraw();
 
 private:
     QLabel *m_serverState;
@@ -56,7 +60,7 @@ private:
     PlayerList *m_playerList;
     quint16 m_lenData;
     QString m_disconnectedPlayer;
-    Round *m_round;
+    bool m_gameStarted;
     GameManagerThread *m_thread;
 };
 

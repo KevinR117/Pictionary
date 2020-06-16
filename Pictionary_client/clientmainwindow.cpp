@@ -130,13 +130,7 @@ void ClientMainWindow::receivedData()
     quint16 typeData;
     in >> typeData;
 
-    if (typeData == 1)
-    {
-        QString receivedMessage;
-        in >> receivedMessage;
-
-        m_chatWindow->getMessages()->append(receivedMessage);
-    } else if (typeData == 0)
+    if (typeData == 0)
     {
         m_playerListWindow->getPlayers()->clear();
 
@@ -156,6 +150,29 @@ void ClientMainWindow::receivedData()
 
             m_playerListWindow->getPlayers()->append(receivedPseudo + tr(", Points : ") +score.setNum(receivedScore) + tr(", Rang : ") +rank.setNum(receivedRank));
         }
+    } else if (typeData == 1)
+    {
+        QString receivedMessage;
+        in >> receivedMessage;
+
+        m_chatWindow->getMessages()->append(receivedMessage);
+    } else if (typeData == 4)
+    {
+        QString drawer;
+        in >> drawer;
+
+        QString drawerMessage;
+        in >> drawerMessage;
+
+        if(drawer == m_connectionWindow->getPseudo())
+        {
+            m_hiddenWordWindow->enableChose();
+        }  else
+        {
+            m_hiddenWordWindow->disableChose();
+        }
+
+        m_chatWindow->getMessages()->append(drawerMessage);
     }
 
     m_lenData = 0;

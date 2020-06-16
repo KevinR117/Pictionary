@@ -50,3 +50,15 @@ void HiddenWord::hideWord(const QString &word)
         }
     }
 }
+
+void HiddenWord::enableChose()
+{
+    this->m_choseWord->setReadOnly(false);
+    this->m_choseButton->setEnabled(true);
+}
+
+void HiddenWord::disableChose()
+{
+    this->m_choseWord->setReadOnly(true);
+    this->m_choseButton->setEnabled(false);
+}

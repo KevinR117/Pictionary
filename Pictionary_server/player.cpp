@@ -33,6 +33,11 @@ bool Player::getReadyness() const
     return this->m_playerReady;
 }
 
+Player::playerState Player::getState() const
+{
+    return this->m_playerState;
+}
+
 void Player::setRank(quint16 rank)
 {
     this->m_rank = rank;

@@ -25,6 +25,9 @@ public:
     //Return true if the player is ready to play
     bool getReadyness() const;
 
+    //Return the state of the player : guesser or drawer
+    playerState getState() const;
+
     //Set the rank of the player to a given value
     void setRank(quint16 rank);
 
