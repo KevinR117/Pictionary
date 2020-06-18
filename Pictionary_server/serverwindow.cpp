@@ -333,27 +333,6 @@ void ServerWindow::timeToSendToEveryOne(int time)
     }
 }
 
-bool ServerWindow::isEqual(QString &playerWord, QString &hiddenWord)
-{
-    playerWord = playerWord.toLower();
-    hiddenWord = hiddenWord.toLower();
-
-    if (playerWord.length() != hiddenWord.length())
-    {
-        return false;
-    } else
-    {
-        for (int i = 0; i < hiddenWord.length(); i++)
-        {
-            if (hiddenWord[i] != playerWord[i])
-            {
-                return false;
-            }
-        }
-    }
-    return  true;
-}
-
 int ServerWindow::index(QString &message)
 {
     int index = 0;
