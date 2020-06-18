@@ -34,6 +34,12 @@ public:
     //Send the hidden word to all players before the beggining of the drawing session
     void hideWord(const QString &word);
 
+    //Verify if the string given in parameter is equal to the hidden word published to all players
+    bool isEqual(QString &playerWord, QString &hiddenWord);
+
+    //Permit to cut a message in two parts : the pseudo and the real message
+    int index(QString &message);
+
 signals:
     void enoughPlayers();
 
@@ -69,6 +75,7 @@ private:
     QString m_disconnectedPlayer;
     bool m_gameStarted;
     GameManagerThread *m_thread;
+    QString m_wordToHide;
 };
 
 #endif // SERVERWINDOW_H

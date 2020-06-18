@@ -1,7 +1,5 @@
 #include "serverwindow.h"
 
-#include <iostream>
-
 ServerWindow::ServerWindow() : QWidget()
 {
     setWindowTitle("Pictionary server");
@@ -39,6 +37,8 @@ ServerWindow::ServerWindow() : QWidget()
     QObject::connect(m_thread, SIGNAL(timeToSend(int)), this, SLOT(timeToSendToEveryOne(int)));
 
     m_gameStarted = false;
+
+    m_wordToHide = tr("");
 }
 
 void ServerWindow::newClientConnection()
@@ -110,7 +110,25 @@ void ServerWindow::receivedData()
         QString messageToSendToEveryOne;
         in >> messageToSendToEveryOne;
 
-        sendMessageToEveryOne(messageToSendToEveryOne);
+        int indexx = index(messageToSendToEveryOne);
+        QString word = tr("");
+        QString pseudo = tr("");
+        for (int i = 0; i < indexx - 1; i++)
+        {
+            pseudo += messageToSendToEveryOne[i];
+        }
+        for (int i = indexx + 2; i < messageToSendToEveryOne.length(); i++)
+        {
+            word += messageToSendToEveryOne[i];
+        }
+
+        if (word.toLower() == m_wordToHide.toLower())
+        {
+            sendMessageToEveryOne(pseudo + tr(" à trouvé le mot !!!"));
+        } else
+        {
+            sendMessageToEveryOne(messageToSendToEveryOne);
+        }
     } else if (dataType == 2)
     {
         in >> m_disconnectedPlayer;
@@ -137,6 +155,8 @@ void ServerWindow::receivedData()
     {
         QString wordToHide;
         in >> wordToHide;
+
+        m_wordToHide = wordToHide;
 
         hideWord(wordToHide);
     }
@@ -311,4 +331,39 @@ void ServerWindow::timeToSendToEveryOne(int time)
     {
         m_clients[i]->write(package);
     }
+}
+
+bool ServerWindow::isEqual(QString &playerWord, QString &hiddenWord)
+{
+    playerWord = playerWord.toLower();
+    hiddenWord = hiddenWord.toLower();
+
+    if (playerWord.length() != hiddenWord.length())
+    {
+        return false;
+    } else
+    {
+        for (int i = 0; i < hiddenWord.length(); i++)
+        {
+            if (hiddenWord[i] != playerWord[i])
+            {
+                return false;
+            }
+        }
+    }
+    return  true;
+}
+
+int ServerWindow::index(QString &message)
+{
+    int index = 0;
+
+    for (int i = 0; i < message.length(); i++)
+    {
+        if (message[i] == ":")
+        {
+            index = i;
+        }
+    }
+    return index;
 }
