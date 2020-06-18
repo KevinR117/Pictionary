@@ -4,7 +4,6 @@ HEADERS += \
     gamemanagerthread.h \
     player.h \
     playerlist.h \
-    round.h \
     serverwindow.h
 
 SOURCES += \
@@ -12,5 +11,4 @@ SOURCES += \
     main.cpp \
     player.cpp \
     playerlist.cpp \
-    round.cpp \
     serverwindow.cpp

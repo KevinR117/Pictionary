@@ -181,6 +181,12 @@ void ClientMainWindow::receivedData()
 
         m_hiddenWordWindow->getHiddenWord()->setPlaceholderText(hiddenWord);
         m_chatWindow->getMessages()->append(beginMessage);
+    } else if (typeData == 7)
+    {
+        int time;
+        in >> time;
+
+        m_timerWindow->setTimeRemaining(QString::number(time));
     }
 
     m_lenData = 0;

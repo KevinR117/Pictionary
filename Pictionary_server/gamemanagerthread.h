@@ -3,8 +3,6 @@
 
 #include <QThread>
 
-#include "round.h"
-
 class GameManagerThread : public QThread
 {
 
@@ -18,12 +16,13 @@ public:
 signals:
     void nextPlayerDrawing();
 
+    void timeToSend(int time);
+
 private slots:
     void receiveNbPlayers(int nbPlayers);
 
 private:
 
-    Round *m_round;
     unsigned long long m_nbRounds;
     int m_nbPlayers;
 };

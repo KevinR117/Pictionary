@@ -36,6 +36,7 @@ ServerWindow::ServerWindow() : QWidget()
     m_thread = new GameManagerThread();
     QObject::connect(m_thread, SIGNAL(nextPlayerDrawing()), this, SLOT(nextPlayerToDraw()));
     QObject::connect(this, SIGNAL(nbPlayers(int)), m_thread, SLOT(receiveNbPlayers(int)));
+    QObject::connect(m_thread, SIGNAL(timeToSend(int)), this, SLOT(timeToSendToEveryOne(int)));
 
     m_gameStarted = false;
 }
@@ -236,6 +237,8 @@ void ServerWindow::launchGame()
 void ServerWindow::nextPlayerToDraw()
 {
     bool somebodyDrawing = false;
+
+    unsigned long long indexDrawing = 0;
     for (unsigned long long i = 0; i < m_playerList->getPlayers().size(); i++)
     {
         if (m_playerList->getPlayers()[i].getState() == Player::drawer)
@@ -243,17 +246,17 @@ void ServerWindow::nextPlayerToDraw()
             m_playerList->getPlayers()[i].setState(Player::guesser);
             m_playerList->getPlayers()[i + 1].setState(Player::drawer);
 
-            sendDrawerToEveryOne(i + 1);
+            indexDrawing = i + 1;
 
             somebodyDrawing = true;
         }
         if (somebodyDrawing == false)
         {
             m_playerList->getPlayers()[0].setState(Player::drawer);
-
-            sendDrawerToEveryOne(0);
         }
     }
+
+    sendDrawerToEveryOne(indexDrawing);
 }
 
 void ServerWindow::hideWord(const QString &word)
@@ -284,6 +287,23 @@ void ServerWindow::hideWord(const QString &word)
     out << (quint16) 6;
     out << hiddenWord;
     out << tr("vous avez 80 secondes, GO !");
+    out.device()->seek(0);
+    out << (quint16) (package.size() - sizeof(quint16));
+
+    for (int i = 0; i < m_clients.size(); i++)
+    {
+        m_clients[i]->write(package);
+    }
+}
+
+void ServerWindow::timeToSendToEveryOne(int time)
+{
+    QByteArray package;
+    QDataStream out(&package, QIODevice::WriteOnly);
+
+    out << (quint16) 0;
+    out << (quint16) 7;
+    out << time;
     out.device()->seek(0);
     out << (quint16) (package.size() - sizeof(quint16));
 

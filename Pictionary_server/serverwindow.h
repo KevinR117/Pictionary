@@ -56,6 +56,9 @@ private slots:
     //Used when a drawing session is ended up
     void nextPlayerToDraw();
 
+    //Used when the time remaining is updated from the Round class
+    void timeToSendToEveryOne(int time);
+
 private:
     QLabel *m_serverState;
     QPushButton *m_exitButton;
