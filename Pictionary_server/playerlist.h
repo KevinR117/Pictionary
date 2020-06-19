@@ -32,6 +32,15 @@ public:
     //Set the concerned player readyness to true
     void setPlayerReady(unsigned long long index);
 
+    //Change the state of the chosen player
+    void setPlayerState(Player::playerState state, unsigned long long index);
+
+    //Change the state of the chosen player to drawer
+    void setPlayerStateToDrawer(unsigned long long index);
+
+    //Change the state of the chosen player to guesser
+    void setPlayerStateToGuesser(unsigned long long index);
+
     //Re-rank players properly after a disconnection of a player, whatever his position
     void rankAfterDisconnection();
 

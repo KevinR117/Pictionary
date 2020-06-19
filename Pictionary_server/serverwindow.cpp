@@ -1,5 +1,7 @@
 #include "serverwindow.h"
 
+#include <iostream>
+
 ServerWindow::ServerWindow() : QWidget()
 {
     setWindowTitle("Pictionary server");
@@ -259,23 +261,21 @@ void ServerWindow::nextPlayerToDraw()
     bool somebodyDrawing = false;
 
     unsigned long long indexDrawing = 0;
-    for (unsigned long long i = 0; i < m_playerList->getPlayers().size(); i++)
+
+    for (unsigned long long i = 0; i < m_playerList->getPlayers().size() - 1; i++)
     {
-        if (m_playerList->getPlayers()[i].getState() == Player::drawer)
+        if (m_playerList->getPlayers()[i].getState() == 1 && somebodyDrawing == false)
         {
-            m_playerList->getPlayers()[i].setState(Player::guesser);
-            m_playerList->getPlayers()[i + 1].setState(Player::drawer);
-
+            m_playerList->setPlayerStateToGuesser(i);
+            m_playerList->setPlayerStateToDrawer(i + 1);
             indexDrawing = i + 1;
-
             somebodyDrawing = true;
         }
-        if (somebodyDrawing == false)
-        {
-            m_playerList->getPlayers()[0].setState(Player::drawer);
-        }
     }
-
+    if (somebodyDrawing == false)
+    {
+        m_playerList->setPlayerStateToDrawer(0);
+    }
     sendDrawerToEveryOne(indexDrawing);
 }
 

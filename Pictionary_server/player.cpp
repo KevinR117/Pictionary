@@ -52,6 +52,16 @@ void Player::setState(playerState state)
     this->m_playerState = state;
 }
 
+void Player::draw()
+{
+    this->m_playerState = Player::playerState::drawer;
+}
+
+void Player::guess()
+{
+    this->m_playerState = Player::playerState::guesser;
+}
+
 void Player::setReady()
 {
     this->m_playerReady = true;

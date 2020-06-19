@@ -88,3 +88,18 @@ void PlayerList::setPlayerReady(unsigned long long index)
 {
     m_players[index].setReady();
 }
+
+void PlayerList::setPlayerState(Player::playerState state, unsigned long long index)
+{
+    m_players[index].setState(state);
+}
+
+void PlayerList::setPlayerStateToDrawer(unsigned long long index)
+{
+    m_players[index].draw();
+}
+
+void PlayerList::setPlayerStateToGuesser(unsigned long long index)
+{
+    m_players[index].guess();
+}

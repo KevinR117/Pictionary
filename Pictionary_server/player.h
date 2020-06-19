@@ -11,7 +11,7 @@ public:
 
     ~Player();
 
-    enum playerState{drawer, guesser};
+    enum playerState{drawer = 1, guesser = 0};
 
     //Return the rank of the player at this moment of the game
     quint16 getRank() const;
@@ -36,6 +36,12 @@ public:
 
     //Set the player state to a given value between drawer and guesser
     void setState(playerState state);
+
+    //Set player state to drawer
+    void draw();
+
+    //Set the player state to guesser
+    void guess();
 
     //Set the player to ready to play
     void setReady();
