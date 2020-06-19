@@ -222,6 +222,8 @@ void ClientMainWindow::onClickedReadyButton()
     out << (quint16) (package.size() - sizeof(quint16));
 
     m_socket->write(package);
+
+    m_whiteBoardWindow->getReadyButton()->setEnabled(false);
 }
 
 void ClientMainWindow::onClickedChoseButton()

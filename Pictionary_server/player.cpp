@@ -1,11 +1,11 @@
 #include "player.h"
 
-Player::Player() : m_pseudo(""), m_score(0), m_rank(1), m_playerState(guesser), m_playerReady(false)
+Player::Player() : m_pseudo(""), m_strongPseudo("") , m_score(0), m_rank(1), m_playerState(guesser), m_playerReady(false)
 {
 
 }
 
-Player::Player(QString pseudo) : m_pseudo(pseudo), m_score(0), m_rank(1), m_playerState(guesser), m_playerReady(false)
+Player::Player(QString pseudo) : m_pseudo(pseudo), m_strongPseudo("<strong>" + pseudo + "</strong>") , m_score(0), m_rank(1), m_playerState(guesser), m_playerReady(false)
 {
 
 }
@@ -26,6 +26,11 @@ quint16 Player::getScore() const
 QString Player::getPseudo() const
 {
     return this->m_pseudo;
+}
+
+QString Player::getStrongPseudo() const
+{
+    return this->m_strongPseudo;
 }
 
 bool Player::getReadyness() const

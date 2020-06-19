@@ -75,7 +75,7 @@ unsigned long long PlayerList::indexOfPlayer(QString &pseudo) const
     unsigned long long index = 0;
     for (unsigned long long i = 0; i < m_players.size(); i++)
     {
-        if (m_players[i].getPseudo() == pseudo)
+        if (m_players[i].getPseudo() == pseudo || m_players[i].getStrongPseudo() == pseudo)
         {
             index = i;
             break;
@@ -102,4 +102,9 @@ void PlayerList::setPlayerStateToDrawer(unsigned long long index)
 void PlayerList::setPlayerStateToGuesser(unsigned long long index)
 {
     m_players[index].guess();
+}
+
+void PlayerList::addScore(unsigned long long index, int score)
+{
+    m_players[index].setScore(m_players[index].getScore() + score);
 }

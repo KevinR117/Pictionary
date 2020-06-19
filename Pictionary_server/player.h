@@ -22,6 +22,9 @@ public:
     //Return the pseudo of the player
     QString getPseudo() const;
 
+    //Return the strong pseudo of the player
+    QString getStrongPseudo() const;
+
     //Return true if the player is ready to play
     bool getReadyness() const;
 
@@ -48,6 +51,7 @@ public:
 
 private:
     QString m_pseudo;
+    QString m_strongPseudo;
     int m_score;
     int m_rank;
     playerState m_playerState;

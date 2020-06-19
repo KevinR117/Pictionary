@@ -37,10 +37,15 @@ public:
     //Permit to cut a message in two parts : the pseudo and the real message
     int index(QString &message);
 
+    //Give the scores of the session to every player
+    void scoreEveryone();
+
 signals:
     void enoughPlayers();
 
     void nbPlayers(int);
+
+    void sessionFinishedEarlier();
 
 private slots:
 
@@ -62,6 +67,12 @@ private slots:
     //Used when the time remaining is updated from the Round class
     void timeToSendToEveryOne(int time);
 
+    //Used when a drawing session has ended
+    void endOfDrawingSession();
+
+    //Used when a rounded has ended
+    void endOfRound();
+
 private:
     QLabel *m_serverState;
     QPushButton *m_exitButton;
@@ -73,6 +84,7 @@ private:
     bool m_gameStarted;
     GameManagerThread *m_thread;
     QString m_wordToHide;
+    QList<QPair<QString, QString>> m_foundingTimes;
 };
 
 #endif // SERVERWINDOW_H

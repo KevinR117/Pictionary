@@ -37,6 +37,9 @@ ServerWindow::ServerWindow() : QWidget()
     QObject::connect(m_thread, SIGNAL(nextPlayerDrawing()), this, SLOT(nextPlayerToDraw()));
     QObject::connect(this, SIGNAL(nbPlayers(int)), m_thread, SLOT(receiveNbPlayers(int)));
     QObject::connect(m_thread, SIGNAL(timeToSend(int)), this, SLOT(timeToSendToEveryOne(int)));
+    QObject::connect(m_thread, SIGNAL(roundEnd()), this, SLOT(endOfRound()));
+    QObject::connect(m_thread, SIGNAL(drawingSessionEnd()), this, SLOT(endOfDrawingSession()));
+    QObject::connect(this, SIGNAL(sessionFinishedEarlier()), m_thread, SLOT(finishSessionNow()));
 
     m_gameStarted = false;
 
@@ -124,9 +127,20 @@ void ServerWindow::receivedData()
             word += messageToSendToEveryOne[i];
         }
 
-        if (word.toLower() == m_wordToHide.toLower())
+        if (word.toLower() == m_wordToHide.toLower() && m_gameStarted == true)
         {
             sendMessageToEveryOne(pseudo + tr(" à trouvé le mot !!!"));
+
+            QPair<QString, QString> pair;
+            pair.first = pseudo;
+            pair.second = m_thread->getTimeRemaining();
+
+            m_foundingTimes << pair;
+
+            if (m_foundingTimes.size() == (int) m_playerList->getPlayers().size() - 1)
+            {
+                emit(sessionFinishedEarlier());
+            }
         } else
         {
             sendMessageToEveryOne(messageToSendToEveryOne);
@@ -306,7 +320,7 @@ void ServerWindow::hideWord(const QString &word)
     out << (quint16) 0;
     out << (quint16) 6;
     out << hiddenWord;
-    out << tr("vous avez 80 secondes, GO !");
+    out << tr("Mot choisi, GO !!");
     out.device()->seek(0);
     out << (quint16) (package.size() - sizeof(quint16));
 
@@ -345,4 +359,25 @@ int ServerWindow::index(QString &message)
         }
     }
     return index;
+}
+
+void ServerWindow::endOfDrawingSession()
+{
+    scoreEveryone();
+    m_wordToHide = tr("");
+}
+
+void ServerWindow::endOfRound()
+{
+
+}
+
+void ServerWindow::scoreEveryone()
+{
+    for (int i = 0; i < m_foundingTimes.size(); i++)
+    {
+        int index = m_playerList->indexOfPlayer(m_foundingTimes[i].first);
+        m_playerList->addScore(index, m_playerList->getPlayers().size() - i);
+    }
+    sendPlayersToEveryOne(m_playerList->getPlayers(), m_playerList->getPlayers().size());
 }

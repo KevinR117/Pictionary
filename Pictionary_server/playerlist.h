@@ -32,6 +32,9 @@ public:
     //Set the concerned player readyness to true
     void setPlayerReady(unsigned long long index);
 
+    //Add the score of the drawing session to the player initial score
+    void addScore(unsigned long long index, int score);
+
     //Change the state of the chosen player
     void setPlayerState(Player::playerState state, unsigned long long index);
 
