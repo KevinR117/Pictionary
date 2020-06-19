@@ -15,7 +15,7 @@ void GameManagerThread::run()
 
             std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 
-            int timeRemaining = 10;
+            int timeRemaining = 80;
             while (timeRemaining != 0)
             {
                 emit(timeToSend(timeRemaining));

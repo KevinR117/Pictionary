@@ -243,7 +243,7 @@ bool ServerWindow::arePlayersReady() const
 
 void ServerWindow::isReadyToPlay()
 {
-    if (m_playerList->getPlayers().size() >= 1 and arePlayersReady())
+    if (m_playerList->getPlayers().size() >= 2 and arePlayersReady())
     {
         emit(enoughPlayers());
     }
