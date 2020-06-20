@@ -6,6 +6,7 @@ SOURCES += main.cpp \
     clientmainwindow.cpp \
     hiddenword.cpp \
     playerlistwindow.cpp \
+    scribblearea.cpp \
     timer.cpp \
     whiteboardwindow.cpp
 
@@ -15,5 +16,6 @@ HEADERS += \
     clientmainwindow.h \
     hiddenword.h \
     playerlistwindow.h \
+    scribblearea.h \
     timer.h \
     whiteboardwindow.h

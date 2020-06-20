@@ -2,6 +2,9 @@
 #define WHITEBOARDWINDOW_H
 
 #include <QtWidgets>
+#include <QList>
+
+#include "scribblearea.h"
 
 class WhiteBoardWindow : public QWidget
 {
@@ -17,9 +20,20 @@ public:
     //Return the Ready button
     QPushButton* getReadyButton() const;
 
+    void createActions();
+
+private slots:
+    void penColor();
+
+    void penWidth();
+
 private :
     QGridLayout *m_whiteBoardLayout;
     QPushButton *m_readyButton;
+    ScribbleArea *m_scribbleArea;
+    QAction *m_penColorAct;
+    QAction *m_penWidthAct;
+    QAction *m_clearScreenAct;
 };
 
 #endif // WHITEBOARDWINDOW_H

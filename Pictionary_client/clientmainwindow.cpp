@@ -21,7 +21,7 @@ ClientMainWindow::ClientMainWindow()
     m_mainLayout->addLayout(m_hiddenWordWindow->getHiddenWordLayout(), 1, 2, 1, 5);
     m_mainLayout->addLayout(m_timerWindow->getTimerLayout(), 1, 0, 1, 2);
     m_mainLayout->addLayout(m_hiddenWordWindow->getChoseWordLayout(), 6, 0, 1, 3);
-    m_mainLayout->addLayout(m_whiteBoardWindow->getWhiteBoardLayout(), 1, 3, 6, 4);
+    m_mainLayout->addLayout(m_whiteBoardWindow->getWhiteBoardLayout(), 2, 3, 5, 4);
 
     setLayout(m_mainLayout);
 
