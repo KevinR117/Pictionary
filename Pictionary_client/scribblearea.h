@@ -20,9 +20,13 @@ public:
 
     void resizeImage(QImage *image, const QSize &newSize);
 
+    QImage getImage() const;
+
     void setPenColor(const QColor &newColor);
 
     void setPenWidth(int newWidth);
+
+    void setImage(QImage &image);
 
     bool isModified() const;
 
@@ -41,6 +45,9 @@ public:
     void resizeEvent(QResizeEvent *event);
 
     void drawLineTo(const QPoint &endPoint);
+
+signals:
+    void imageChanged();
 
 private slots:
     void clearImage();

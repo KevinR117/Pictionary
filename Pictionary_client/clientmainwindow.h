@@ -30,7 +30,7 @@ public:
     //When a player has connected successfully, it send to the server the player pseudo
     void sendPlayerPseudo();
 
-public slots:
+private slots:
 
     //Used when connection button is clicked
     void onClickedConnectionButton();
@@ -52,6 +52,9 @@ public slots:
 
     //Used when the server send us a message that has been sent by another player
     void receivedData();
+
+    //Used when the drawer has modified the image
+    void sendNewImage();
 
 private:
     QGridLayout *m_mainLayout;

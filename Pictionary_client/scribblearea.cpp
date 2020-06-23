@@ -94,6 +94,7 @@ void ScribbleArea::drawLineTo(const QPoint &endPoint)
     int rad = (m_penWidth / 2) + 2;
     update(QRect(m_lastPoint, endPoint).normalized().adjusted(-rad, -rad, rad, rad));
     m_lastPoint = endPoint;
+    emit(imageChanged());
 }
 
 void ScribbleArea::resizeEvent(QResizeEvent *event)
@@ -117,4 +118,14 @@ void ScribbleArea::resizeImage(QImage *image, const QSize &newSize)
     QPainter painter(&newImage);
     painter.drawImage(QPoint(0, 0), *image);
     *image = newImage;
+}
+
+QImage ScribbleArea::getImage() const
+{
+    return m_drawing;
+}
+
+void ScribbleArea::setImage(QImage &image)
+{
+    m_drawing = image;
 }

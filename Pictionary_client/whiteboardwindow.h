@@ -20,20 +20,25 @@ public:
     //Return the Ready button
     QPushButton* getReadyButton() const;
 
-    void createActions();
+    //Return the Scribble area
+    ScribbleArea* getScribbleArea() const;
+
+signals:
+    void newImageAvailable();
 
 private slots:
     void penColor();
 
     void penWidth();
 
+    void imageHasChanged();
+
 private :
     QGridLayout *m_whiteBoardLayout;
     QPushButton *m_readyButton;
     ScribbleArea *m_scribbleArea;
-    QAction *m_penColorAct;
-    QAction *m_penWidthAct;
-    QAction *m_clearScreenAct;
+    QPushButton *m_colorButton;
+    QPushButton *m_widthButton;
 };
 
 #endif // WHITEBOARDWINDOW_H

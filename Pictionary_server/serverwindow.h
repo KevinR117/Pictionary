@@ -25,6 +25,9 @@ public:
     //Send the pseudo of the drawer to designate the good one
     void sendDrawerToEveryOne(int i);
 
+    //Send the modified image to every one
+    void sendImageToEveryOne(QImage &image, QTcpSocket *socket);
+
     //If there are enough players, the signal enoughPlayers() is emitted
     void isReadyToPlay();
 

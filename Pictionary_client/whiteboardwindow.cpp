@@ -5,10 +5,20 @@ WhiteBoardWindow::WhiteBoardWindow()
     m_whiteBoardLayout = new QGridLayout();
     m_readyButton = new QPushButton("Prêt");
 
+    m_colorButton = new QPushButton("couleur du trait");
+    m_widthButton = new QPushButton("épaisseur");
+
     m_scribbleArea = new ScribbleArea(this);
 
-    m_whiteBoardLayout->addWidget(m_scribbleArea, 0, 0, 1, 1);
-    m_whiteBoardLayout->addWidget(m_readyButton, 10, 0, 1, 1);
+    m_whiteBoardLayout->addWidget(m_scribbleArea, 0, 0, 8, 2);
+    m_whiteBoardLayout->addWidget(m_colorButton, 9, 0, 1, 1);
+    m_whiteBoardLayout->addWidget(m_widthButton, 9, 1, 1, 1);
+    m_whiteBoardLayout->addWidget(m_readyButton, 10, 0, 1, 2);
+
+    QObject::connect(m_colorButton, SIGNAL(clicked()), this, SLOT(penColor()));
+    QObject::connect(m_widthButton, SIGNAL(clicked()), this, SLOT(penWidth()));
+
+    QObject::connect(m_scribbleArea, SIGNAL(imageChanged()), this, SLOT(imageHasChanged()));
 }
 
 QGridLayout* WhiteBoardWindow::getWhiteBoardLayout() const
@@ -33,21 +43,19 @@ void WhiteBoardWindow::penColor()
 void WhiteBoardWindow::penWidth()
 {
     bool ok = false;
-    int newWidth = QInputDialog::getInt(this, tr("Size of the pen"), tr("Please select the pen width : "), 1, 50, 1, ok);
+    int newWidth = QInputDialog::getInt(this, tr("Size of the pen"), tr("Please select the pen width : "),10, 1, 50, 1, &ok);
     if (ok)
     {
         m_scribbleArea->setPenWidth(newWidth);
     }
 }
 
-void WhiteBoardWindow::createActions()
+ScribbleArea* WhiteBoardWindow::getScribbleArea() const
 {
-    m_penColorAct = new QAction(tr("&Pen Color ..."), this);
-    QObject::connect(m_penColorAct, SIGNAL(triggered()), this, SLOT(penColor()));
+    return m_scribbleArea;
+}
 
-    m_penWidthAct = new QAction(tr("&Pen Width ..."), this);
-    QObject::connect(m_penWidthAct, SIGNAL(triggered()), this, SLOT(penWidth()));
-
-    m_clearScreenAct = new QAction(tr("&Clear Screen ..."), this);
-    QObject::connect(m_clearScreenAct, SIGNAL(triggered()), m_scribbleArea, SLOT(clearImage()));
+void WhiteBoardWindow::imageHasChanged()
+{
+    emit(newImageAvailable());
 }

@@ -175,6 +175,12 @@ void ServerWindow::receivedData()
         m_wordToHide = wordToHide;
 
         hideWord(wordToHide);
+    } else if (dataType == 8)
+    {
+        QImage image;
+        in >> image;
+
+        sendImageToEveryOne(image, socket);
     }
 
     m_lenData = 0;
@@ -380,4 +386,24 @@ void ServerWindow::scoreEveryone()
         m_playerList->addScore(index, m_playerList->getPlayers().size() - i);
     }
     sendPlayersToEveryOne(m_playerList->getPlayers(), m_playerList->getPlayers().size());
+}
+
+void ServerWindow::sendImageToEveryOne(QImage &image, QTcpSocket *socket)
+{
+    QByteArray package;
+    QDataStream out(&package, QIODevice::WriteOnly);
+
+    out << (quint16) 0;
+    out << (quint16) 8;
+    out << image;
+    out.device()->seek(0);
+    out << (quint16) (package.size() - sizeof(quint16));
+
+    for (int i = 0; i < m_clients.size(); i++)
+    {
+        if (m_clients[i] != socket)
+        {
+            m_clients[i]->write(package);
+        }
+    }
 }

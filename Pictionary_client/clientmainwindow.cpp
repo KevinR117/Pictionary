@@ -36,6 +36,8 @@ ClientMainWindow::ClientMainWindow()
     QObject::connect(m_socket, SIGNAL(disconnected()), this, SLOT(onDisconnectedClient()));
 
     QObject::connect(m_socket, SIGNAL(readyRead()), this, SLOT(receivedData()));
+
+    QObject::connect(m_whiteBoardWindow, SIGNAL(newImageAvailable()), this, SLOT(sendNewImage()));
 }
 
 void ClientMainWindow::onClickedConnectionButton()
@@ -187,6 +189,12 @@ void ClientMainWindow::receivedData()
         in >> time;
 
         m_timerWindow->setTimeRemaining(QString::number(time));
+    } else if (typeData == 8)
+    {
+        QImage modifiedImage;
+        in >> modifiedImage;
+
+        m_whiteBoardWindow->getScribbleArea()->setImage(modifiedImage);
     }
 
     m_lenData = 0;
@@ -240,4 +248,18 @@ void ClientMainWindow::onClickedChoseButton()
     m_socket->write(package);
 
     m_hiddenWordWindow->disableChose();
+}
+
+void ClientMainWindow::sendNewImage()
+{
+    QByteArray package;
+    QDataStream out(&package, QIODevice::WriteOnly);
+
+    out << (quint16) 0;
+    out << (quint16) 8;
+    out << m_whiteBoardWindow->getScribbleArea()->getImage();
+    out.device()->seek(0);
+    out << (quint16) (package.size() - sizeof(quint16));
+
+    m_socket->write(package);
 }
